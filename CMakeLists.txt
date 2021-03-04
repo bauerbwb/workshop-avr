@@ -57,3 +57,5 @@ set(
     -DF_CPU=16000000UL \
     "
 )
+
+add_subdirectory(blink)
