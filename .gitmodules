@@ -1,0 +1,3 @@
+[submodule "toolchain-avr-gcc"]
+	path = toolchain-avr-gcc
+	url = https://github.com/apcountryman/toolchain-avr-gcc.git
