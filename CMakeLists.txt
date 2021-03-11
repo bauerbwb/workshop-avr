@@ -59,3 +59,5 @@ set(
 )
 
 add_subdirectory(blink)
+add_subdirectory(USART0-Hello-World)
+
