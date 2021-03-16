@@ -16,6 +16,13 @@ namespace {
        uint8_t volatile ddr;
        uint8_t volatile port;
 
+       void toggle(uint8_t mask){
+            pin = mask;
+       }
+
+       void config_output (uint8_t mask){
+            ddr |= mask;
+       }
     };
     auto & portb() noexcept
     {
@@ -29,11 +36,11 @@ int main()
     constexpr auto mask = uint8_t{ 1 << 5};
     auto & port = portb();
 
-    port.ddr = mask;
+    port.config_output(mask);
 
     for(;;)
     {
-        port.pin = mask;
+        port.toggle(mask);
         _delay_ms(100);
     }
 }
