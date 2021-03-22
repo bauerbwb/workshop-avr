@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <stdint.h>
+//#include <cstddef>
 
 namespace {
 
@@ -16,8 +17,8 @@ namespace {
         // ATmega48A datasheet pg185 ex:Ccode, pg621 register location
         uint8_t volatile ucsrA;
         uint8_t volatile ucsrB;
-        uint8_t volatile ucsrC;
-        
+        uint8_t volatile ucsrC;       
+//        std::string message = "Hello World";
 
         void USART_Init(void){
         //Bit rate, refer to datasheet page 199
@@ -53,12 +54,20 @@ int main(void){
     auto & USART = portUSART();
     char c;
     char const * message = "Hello, World";
-
+//    size_t message_size = strlen(message);
+    
     USART.USART_Init();
    
+/*    do { 
+        ((c=*message++));
+        USART.USART_Transmit(c);
+      } while(message_size != 0);
+*/
     while (( c = *message++)){
         USART.USART_Transmit(c);
     }
+
+
 }
 
 
