@@ -17,8 +17,6 @@ namespace {
         uint8_t volatile ucsrA;
         uint8_t volatile ucsrB;
         uint8_t volatile ucsrC;
-        uint8_t volatile ubrrL; 
-        uint8_t volatile ubrrH; 
         
 
         void USART_Init(void){
