@@ -2,39 +2,65 @@
 #include <util/delay.h>
 #include <stdint.h>
 
-void USART_Init(void);
-void USART_Transmit(uint8_t);
+namespace {
+
+    class USART {
+         public:
+         USART() = delete;
+         USART( USART && ) = delete;
+         USART( USART const & ) = delete;
+        ~USART() = delete;
+         auto operator=( USART && ) = delete;
+         auto operator=( USART const & ) = delete;
+          
+        // ATmega48A datasheet pg185 ex:Ccode, pg621 register location
+        uint8_t volatile ucsrA;
+        uint8_t volatile ucsrB;
+        uint8_t volatile ucsrC;
+        uint8_t volatile ubrrL; 
+        uint8_t volatile ubrrH; 
+        
+
+        void USART_Init(void){
+        //Bit rate, refer to datasheet page 199
+        UBRR0 = 8;
+        // Set frame 1 stop bit, 8 bit
+        ucsrC = (0<<USBS0)|(3<<UCSZ00);
+        //Enable Transmit
+        ucsrB = (1<<TXEN0);
+        }
+
+        bool USART_Transmit_buffer_empty(){    
+            return (~(UCSR0A) & (1<<UDRE0));  
+        }
+        
+        void USART_Transmit(uint8_t data){
+        while (USART_Transmit_buffer_empty() == true){
+         }
+         UDR0 = data;
+        }
+    };
+    
+    auto & portUSART() noexcept {
+        
+        return *reinterpret_cast <USART*>( 0xC0 );
+    }
+    
+
+}
+
 
 int main(void){
-
-    char c;
-    USART_Init();
     
+    auto & USART = portUSART();
+    char c;
     char const * message = "Hello, World";
 
+    USART.USART_Init();
+   
     while (( c = *message++)){
-        USART_Transmit(c);
+        USART.USART_Transmit(c);
     }
-
-    return 0;
-}
-
-void USART_Init(void){
-    //Bit rate, refer to datasheet page 199
-    UBRR0 = 8;
-    // Set frame 1 stop bit, 8 bit
-    UCSR0C = (0<<USBS0)|(3<<UCSZ00);
-    //Enable Transmit
-    UCSR0B = (1<<TXEN0);
-}
-
-void USART_Transmit(uint8_t data){
-  
-    while (!(UCSR0A & (1<< UDRE0))){
-    }
-
-    UDR0 = data;
-
 }
 
 
